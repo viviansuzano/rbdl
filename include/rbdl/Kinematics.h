@@ -168,7 +168,7 @@ void UpdateKinematicsCustom(const Model &model, ModelData<T> &model_data,
 
   if (QDot)
   {
-    assert(Q->rows() == model.q_size);
+    //assert(Q->rows() == model.q_size);
     assert(QDot->rows() == model.qdot_size);
 
     for (i = 1; i < model.mBodies.size(); i++)
@@ -198,8 +198,8 @@ void UpdateKinematicsCustom(const Model &model, ModelData<T> &model_data,
 
   if (QDDot)
   {
-    assert(Q->rows() == model.q_size);
-    assert(QDot->rows() == model.qdot_size);
+    //assert(Q->rows() == model.q_size);
+    //assert(QDot->rows() == model.qdot_size);
     assert(QDDot->rows() == model.qdot_size);
 
     for (i = 1; i < model.mBodies.size(); i++)

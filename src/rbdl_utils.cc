@@ -80,6 +80,8 @@ std::string print_hierarchy (const RigidBodyDynamics::Model &model, const RigidB
 
   result << get_body_name (model, body_index);
 
+  std::cout << "Body " << body_index << " -> " << get_body_name (model, body_index) << std::endl;
+
   if (body_index > 0)
     result << " [ ";
 
@@ -134,18 +136,34 @@ RBDL_DLLAPI std::string GetModelHierarchy (const Model &model, const ModelDatad 
 RBDL_DLLAPI std::string GetNamedBodyOriginsOverview (const Model &model, ModelDatad &model_data) {
   stringstream result ("");
 
-  VectorNd Q (VectorNd::Zero(model.dof_count));
+  //VectorNd Q (VectorNd::Zero(model.dof_count));
+  VectorNd Q (VectorNd::Zero(model.q_size));
   UpdateKinematicsCustom<double> (model, model_data, &Q, NULL, NULL);
 
+  // Movable bodies
   for (unsigned int body_id = 0; body_id < model.mBodies.size(); body_id++) {
     std::string body_name = model.GetBodyName (body_id);
 
-    if (body_name.size() == 0) 
+    if (body_name.size() == 0)
       continue;
 
     Vector3d position = CalcBodyToBaseCoordinates (model, model_data, Q, body_id, Vector3d (0., 0., 0.), false);
 
-    result << body_name << ": " << position.transpose() << endl;
+    result << body_name << "(" << body_id << "): " << position.transpose() << endl;
+  }
+
+  // Fixed bodies
+  for (unsigned int fbody_index = 0; fbody_index < model.mFixedBodies.size(); fbody_index++) {
+    //if (model.mFixedBodies[fbody_index].mMovableParent == body_index) {
+
+	  unsigned int fixed_body_id = model.fixed_body_discriminator + fbody_index;
+      std::string body_name = model.GetBodyName(fixed_body_id);
+      //std::cout << model.mFixedBodies.size() << ", " << model.fixed_body_discriminator << ", " << fixed_body_id << std::endl;
+
+      Vector3d position = CalcBodyToBaseCoordinates (model, model_data, Q, fixed_body_id, Vector3d (0., 0., 0.), false);
+
+      result << body_name << "(" << fbody_index << "," <<fixed_body_id << "): " << position.transpose() << endl;
+    //}
   }
 
   return result.str();

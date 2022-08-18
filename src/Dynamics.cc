@@ -73,7 +73,7 @@ void CompositeRigidBodyAlgorithm (
         update_kinematics);
 }
 
-RBDL_DLLAPI void NonlinearEffects ( 
+RBDL_DLLAPI void NonlinearEffects (
     Model &model,
     ModelDatad &model_data,
     const VectorNd &Q,
